@@ -129,7 +129,7 @@
     <h1 class="title">留下您的資料，<br>我們安排學習顧問與您聯繫</h1>
     <p class="lead">請填寫以下資訊，瀚將教育學習顧問 Kelly 將盡快與您聯繫，說明課程細節、梯次安排或企業內訓合作方式。</p>
 
-    <form id="consult-form" target="hidden_iframe" method="POST" action="PASTE_YOUR_APPS_SCRIPT_URL_HERE">
+    <form id="consult-form" target="hidden_iframe" method="POST" action="https://script.google.com/macros/s/AKfycby0pd5Zx5g9I626NleuDaiVTHGXxkWcMfcT6UnoGIB4l1LrAjdNgT8VsQmsK4DKmzDnBQ/exec">
       <div class="field">
         <label for="name">姓名<span class="req">*</span></label>
         <input type="text" id="name" name="name" required placeholder="請輸入姓名">
@@ -183,21 +183,28 @@
     var form = document.getElementById('consult-form');
     var btn = document.getElementById('submit-btn');
     var iframe = document.getElementById('hidden_iframe');
-    var submitted = false;
+    var successBlock = document.getElementById('success-block');
+    var formSubmitted = false;
+    var done = false;
+
+    function showSuccess(){
+      if(done) return;
+      done = true;
+      form.style.display = 'none';
+      successBlock.classList.add('show');
+    }
 
     form.addEventListener('submit', function(){
       btn.disabled = true;
       btn.textContent = '送出中…';
+      formSubmitted = true;
+      // fallback in case the iframe's load event doesn't fire in this browser
+      setTimeout(showSuccess, 4000);
     });
 
     iframe.addEventListener('load', function(){
-      if(!submitted){
-        // first load is the blank iframe itself; ignore
-        submitted = true;
-        return;
-      }
-      form.style.display = 'none';
-      document.getElementById('success-block').classList.add('show');
+      if(!formSubmitted) return; // ignore the iframe's own initial blank load
+      showSuccess();
     });
   </script>
 
